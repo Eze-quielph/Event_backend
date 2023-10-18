@@ -4,6 +4,7 @@ import { User } from './entities/user.entity';
 import { UserReturn } from 'src/Common/Interfaces/user-interface';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
+import { ErrorManager } from 'src/share/types/error.manager';
 
 @Injectable()
 export class UserService {

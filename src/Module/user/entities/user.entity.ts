@@ -1,4 +1,5 @@
 import { Table, Column, PrimaryKey, Unique, AllowNull, Model, Default, DataType } from "sequelize-typescript"
+import {Exclude} from 'class-transformer'
 
 @Table({
     tableName: "users",
@@ -38,15 +39,18 @@ export class User extends Model{
     Email: string
 
     @AllowNull(false)
+    @Exclude()
     @Column(DataType.STRING)
     Password: string
 
     @Column(DataType.STRING)
     Image: string
 
+    @Exclude()
     @Column(DataType.TEXT)
     Qr: string
 
+    @Exclude()
     @Column(DataType.TEXT)
     Tickets: string
 
