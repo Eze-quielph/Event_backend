@@ -5,9 +5,10 @@ import {ConfigModule} from '@nestjs/config'
 import { DatabaseModule } from './Config/Database/MySql/database.module';
 import { UserModule } from './Module/user/user.module';
 import { AuthModule } from './Authentication/auth.module';
+import { EventModule } from './Module/event/event.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({isGlobal: true}), DatabaseModule, UserModule, AuthModule],
+  imports: [ConfigModule.forRoot({isGlobal: true}), DatabaseModule, UserModule, EventModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

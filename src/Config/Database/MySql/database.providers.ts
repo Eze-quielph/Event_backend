@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { PROVIDE_CONSTANTS_MYSQL } from 'src/Common/Constants/database';
 import { User } from 'src/Module/user/entities/user.entity';
+import { Event } from 'src/Module/event/entities/event.entity';
 
 export const databaseProviders = [
     {
@@ -14,7 +15,7 @@ export const databaseProviders = [
                 password: process.env.MYSQL_PASSWORD,
                 database: process.env.MYSQL_DATABASE,
             });
-            sequelize.addModels([User]);
+            sequelize.addModels([User, Event]);
             await sequelize.sync();
             return sequelize;
         }

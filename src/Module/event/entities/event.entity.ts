@@ -13,6 +13,7 @@ export class Event extends Model {
     id: string
 
     @AllowNull(false)
+    @Unique
     @Column(DataType.STRING)
     Name: string
 
