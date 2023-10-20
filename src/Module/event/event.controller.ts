@@ -40,7 +40,7 @@ export class EventController {
         });
       }
       const event = await this.eventService.update(id, updateEventDto);
-      
+
       return event;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
@@ -56,7 +56,7 @@ export class EventController {
           message: 'Name is required',
         });
       }
-      console.log(name)
+      console.log(name);
       const event = await this.eventService.findByName(name);
       return event;
     } catch (error) {
@@ -107,6 +107,131 @@ export class EventController {
       }
       const event = await this.eventService.restore(id);
       return event;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  @Get('filter/category')
+  async SearchByCategory(@Query('category') category: string) {
+    try {
+      if (!category)
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'category is required',
+        });
+      const events = await this.eventService.SearchByCategory(category);
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  @Get('filter/price')
+  async SearchByPrice(
+    @Query('min_price') min_price: number,
+    @Query('max_price') max_price: number,
+  ) {
+    try {
+      if (!min_price || !max_price)
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'range price is required',
+        });
+      const events = await this.eventService.SearchByPrice(
+        min_price,
+        max_price,
+      );
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  @Get('filter/day')
+  async SearchByDay(
+    @Query('min_day') min_day: Date,
+    @Query('max_day') max_day: Date,
+  ) {
+    try {
+      if (!min_day || !max_day)
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'range day is required',
+        });
+      const events = await this.eventService.SearchByDays(min_day, max_day);
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  @Get('filter/category_price')
+  async SearchByCategoryAndPrice(
+    @Query('min_price') min_price: number,
+    @Query('max_price') max_price: number,
+    @Query('category') category: string,
+  ) {
+    try {
+      if (!min_price || !max_price || !category)
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'range price is required',
+        });
+      const events = await this.eventService.SearchByCategoryAndPrice(
+        category,
+        max_price,
+        min_price
+      );
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  @Get('filter/category_day')
+  async SearchByCategoryAndDay(
+    @Query('min_day') min_day: Date,
+    @Query('max_day') max_day: Date,
+    @Query('category') category: string,
+  ) {
+    try {
+      if (!min_day || !max_day || !category)
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'range price is required',
+        });
+      const events = await this.eventService.SearchByCategoryAndDay(
+        category,
+        max_day,
+        min_day
+      );
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  @Get('filter/price_day')
+  async SearchByPriceAndDay(
+    @Query('min_day') min_day: Date,
+    @Query('max_day') max_day: Date,
+    @Query('min_price') min_price: number,
+    @Query('max_price') max_price: number
+  ) {
+    try {
+      if (!min_day || !max_day || !min_price || !max_price)
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'range price is required',
+        });
+      const events = await this.eventService.SearchByPriceAndDay(
+        min_price,
+        max_price,
+        max_day,
+        min_day,
+      );
+      return events;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }

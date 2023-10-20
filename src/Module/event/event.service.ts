@@ -74,16 +74,19 @@ export class EventService {
   async update(id: string, updateEventDto: UpdateEventDto) {
     try {
       if (!id) {
-        throw new ErrorManager({ type: 'BAD_REQUEST', message: 'ID is required' });
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'ID is required',
+        });
       }
-  
+
       const updatedEvent = await Event.update(updateEventDto, {
         where: { id },
-      })
+      });
 
-      const event = await Event.findByPk(id)
-  
-      return {updatedEvent, event}
+      const event = await Event.findByPk(id);
+
+      return { updatedEvent, event };
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
@@ -125,6 +128,161 @@ export class EventService {
       }
 
       return restoredEvent;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  async SearchByCategory(category: string) {
+    try {
+      const events = await Event.findAndCountAll({
+        where: {
+          Category: { [Op.like]: `${category}`, [Op.regexp]: '^[a-zA-Z]' },
+        },
+      });
+
+      if (events.count === 0) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: 'Event not found',
+        });
+      }
+
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  async SearchByCategoryAndPrice(
+    category: string,
+    max_price: number,
+    min_price: number,
+  ) {
+    try {
+      const events = await Event.findAndCountAll({
+        where: {
+          Category: { [Op.like]: `${category}`, [Op.regexp]: '^[a-zA-Z]' },
+          Price: { [Op.and]: { [Op.lte]: max_price, [Op.gte]: min_price } },
+        },
+      });
+
+      if (events.count === 0) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: 'Event not found',
+        });
+      }
+
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  async SearchByPrice(min_price: number, max_price: number) {
+    try {
+      const events = await Event.findAndCountAll({
+        where: {
+          Price: {
+            [Op.and]: {
+              [Op.lte]: max_price,
+              [Op.gte]: min_price,
+            },
+          },
+        },
+      });
+
+      if (events.count === 0) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: 'Event not found of price',
+        });
+      }
+
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  async SearchByDays(min_day: Date, max_day: Date) {
+    try {
+      const minDay = new Date(min_day);
+      const maxDay = new Date(max_day);
+
+      const events = await Event.findAndCountAll({
+        where: {
+          Day: {
+            [Op.and]: {
+              [Op.lte]: maxDay,
+              [Op.gte]: minDay,
+            },
+          },
+        },
+      });
+
+      if (events.count === 0) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: 'Event not found of range day',
+        });
+      }
+
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  async SearchByCategoryAndDay(category: string, max_day: Date, min_day: Date) {
+    try {
+      const minDay = new Date(min_day);
+      const maxDay = new Date(max_day);
+      const events = await Event.findAndCountAll({
+        where: {
+          Category: { [Op.like]: `${category}`, [Op.regexp]: '^[a-zA-Z]' },
+          Day: { [Op.and]: { [Op.lte]: maxDay, [Op.gte]: minDay } },
+        },
+      });
+
+      if (events.count === 0) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: 'Event not found',
+        });
+      }
+
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  async SearchByPriceAndDay(
+    min_price: number,
+    max_price: number,
+    max_day: Date,
+    min_day: Date,
+  ) {
+    try {
+      const minDay = new Date(min_day);
+      const maxDay = new Date(max_day);
+      const events = await Event.findAndCountAll({
+        where: {
+          Day: { [Op.and]: { [Op.lte]: maxDay, [Op.gte]: minDay } },
+          Price: { [Op.and]: { [Op.lte]: max_price, [Op.gte]: min_price } },
+        },
+      });
+
+      if (events.count === 0) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: 'Event not found',
+        });
+      }
+
+      return events;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
