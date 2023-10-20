@@ -48,7 +48,11 @@ export class EventController {
   }
 
   @Get('search')
-  async SearchEventsByName(@Query('name') name: string) {
+  async SearchEventsByName(
+    @Query('name') name: string,
+    @Query('limit') limit: number,
+    @Query('off-set') off_set: number,
+  ) {
     try {
       if (!name) {
         throw new ErrorManager({
@@ -57,7 +61,7 @@ export class EventController {
         });
       }
       console.log(name);
-      const event = await this.eventService.findByName(name);
+      const event = await this.eventService.findByName(name, limit, off_set);
       return event;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
@@ -113,14 +117,22 @@ export class EventController {
   }
 
   @Get('filter/category')
-  async SearchByCategory(@Query('category') category: string) {
+  async SearchByCategory(
+    @Query('category') category: string,
+    @Query('limit') limit: number,
+    @Query('off-set') off_set: number,
+  ) {
     try {
       if (!category)
         throw new ErrorManager({
           type: 'BAD_REQUEST',
           message: 'category is required',
         });
-      const events = await this.eventService.SearchByCategory(category);
+      const events = await this.eventService.SearchByCategory(
+        category,
+        limit,
+        off_set,
+      );
       return events;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
@@ -131,6 +143,8 @@ export class EventController {
   async SearchByPrice(
     @Query('min_price') min_price: number,
     @Query('max_price') max_price: number,
+    @Query('limit') limit: number,
+    @Query('off-set') off_set: number,
   ) {
     try {
       if (!min_price || !max_price)
@@ -141,6 +155,8 @@ export class EventController {
       const events = await this.eventService.SearchByPrice(
         min_price,
         max_price,
+        limit,
+        off_set,
       );
       return events;
     } catch (error) {
@@ -152,6 +168,8 @@ export class EventController {
   async SearchByDay(
     @Query('min_day') min_day: Date,
     @Query('max_day') max_day: Date,
+    @Query('limit') limit: number,
+    @Query('off-set') off_set: number,
   ) {
     try {
       if (!min_day || !max_day)
@@ -159,7 +177,12 @@ export class EventController {
           type: 'BAD_REQUEST',
           message: 'range day is required',
         });
-      const events = await this.eventService.SearchByDays(min_day, max_day);
+      const events = await this.eventService.SearchByDays(
+        min_day,
+        max_day,
+        limit,
+        off_set,
+      );
       return events;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
@@ -171,6 +194,8 @@ export class EventController {
     @Query('min_price') min_price: number,
     @Query('max_price') max_price: number,
     @Query('category') category: string,
+    @Query('limit') limit: number,
+    @Query('off-set') off_set: number,
   ) {
     try {
       if (!min_price || !max_price || !category)
@@ -181,7 +206,9 @@ export class EventController {
       const events = await this.eventService.SearchByCategoryAndPrice(
         category,
         max_price,
-        min_price
+        min_price,
+        limit,
+        off_set,
       );
       return events;
     } catch (error) {
@@ -194,6 +221,8 @@ export class EventController {
     @Query('min_day') min_day: Date,
     @Query('max_day') max_day: Date,
     @Query('category') category: string,
+    @Query('limit') limit: number,
+    @Query('off-set') off_set: number,
   ) {
     try {
       if (!min_day || !max_day || !category)
@@ -204,7 +233,9 @@ export class EventController {
       const events = await this.eventService.SearchByCategoryAndDay(
         category,
         max_day,
-        min_day
+        min_day,
+        limit,
+        off_set,
       );
       return events;
     } catch (error) {
@@ -217,7 +248,9 @@ export class EventController {
     @Query('min_day') min_day: Date,
     @Query('max_day') max_day: Date,
     @Query('min_price') min_price: number,
-    @Query('max_price') max_price: number
+    @Query('max_price') max_price: number,
+    @Query('limit') limit: number,
+    @Query('off-set') off_set: number,
   ) {
     try {
       if (!min_day || !max_day || !min_price || !max_price)
@@ -230,6 +263,8 @@ export class EventController {
         max_price,
         max_day,
         min_day,
+        limit,
+        off_set,
       );
       return events;
     } catch (error) {

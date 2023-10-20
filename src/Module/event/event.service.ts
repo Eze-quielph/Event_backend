@@ -38,19 +38,30 @@ export class EventService {
     }
   }
 
-  async findByName(name: string) {
+  async findByName(name: string, limit: number, off_set: number) {
     try {
-      const event = await Event.findAndCountAll({
-        where: { Name: { [Op.like]: `${name}%`, [Op.regexp]: '^[a-zA-Z]' } },
+      const Limit: number = +limit || 20;
+      const OffLimit: number = +off_set || 0;
+      const events = await Event.findAndCountAll({
+        where: {
+          Name: {
+            [Op.like]: `${name}%`,
+            [Op.regexp]: '^[a-zA-Z]',
+          },
+        },
+        limit: Limit,
+        offset: OffLimit,
       });
 
-      if (event.count === 0) {
+      console.log(events);
+
+      if (events.count === 0) {
         throw new ErrorManager({
           type: 'NOT_FOUND',
           message: 'Event not found',
         });
       }
-      return event;
+      return events;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
@@ -133,12 +144,16 @@ export class EventService {
     }
   }
 
-  async SearchByCategory(category: string) {
+  async SearchByCategory(category: string, limit: number, off_set: number) {
     try {
+      const Limit: number = +limit || 20;
+      const OffLimit: number = +off_set || 0;
       const events = await Event.findAndCountAll({
         where: {
           Category: { [Op.like]: `${category}`, [Op.regexp]: '^[a-zA-Z]' },
         },
+        limit: Limit,
+        offset: OffLimit,
       });
 
       if (events.count === 0) {
@@ -158,13 +173,19 @@ export class EventService {
     category: string,
     max_price: number,
     min_price: number,
+    limit: number,
+    off_set: number,
   ) {
     try {
+      const Limit: number = +limit || 20;
+      const OffLimit: number = +off_set || 0;
       const events = await Event.findAndCountAll({
         where: {
           Category: { [Op.like]: `${category}`, [Op.regexp]: '^[a-zA-Z]' },
           Price: { [Op.and]: { [Op.lte]: max_price, [Op.gte]: min_price } },
         },
+        limit:Limit,
+        offset:OffLimit
       });
 
       if (events.count === 0) {
@@ -180,8 +201,15 @@ export class EventService {
     }
   }
 
-  async SearchByPrice(min_price: number, max_price: number) {
+  async SearchByPrice(
+    min_price: number,
+    max_price: number,
+    limit: number,
+    off_set: number,
+  ) {
     try {
+      const Limit: number = +limit || 20;
+      const OffLimit: number = +off_set || 0;
       const events = await Event.findAndCountAll({
         where: {
           Price: {
@@ -191,6 +219,8 @@ export class EventService {
             },
           },
         },
+        limit:Limit,
+        offset:OffLimit
       });
 
       if (events.count === 0) {
@@ -206,8 +236,15 @@ export class EventService {
     }
   }
 
-  async SearchByDays(min_day: Date, max_day: Date) {
+  async SearchByDays(
+    min_day: Date,
+    max_day: Date,
+    limit: number,
+    off_set: number,
+  ) {
     try {
+      const Limit: number = +limit || 20;
+      const OffLimit: number = +off_set || 0;
       const minDay = new Date(min_day);
       const maxDay = new Date(max_day);
 
@@ -220,6 +257,8 @@ export class EventService {
             },
           },
         },
+        limit:Limit,
+        offset:OffLimit
       });
 
       if (events.count === 0) {
@@ -235,15 +274,26 @@ export class EventService {
     }
   }
 
-  async SearchByCategoryAndDay(category: string, max_day: Date, min_day: Date) {
+  async SearchByCategoryAndDay(
+    category: string,
+    max_day: Date,
+    min_day: Date,
+    limit: number,
+    off_set: number,
+  ) {
     try {
       const minDay = new Date(min_day);
       const maxDay = new Date(max_day);
+      const Limit: number = +limit || 20;
+      const OffLimit: number = +off_set || 0;
+
       const events = await Event.findAndCountAll({
         where: {
           Category: { [Op.like]: `${category}`, [Op.regexp]: '^[a-zA-Z]' },
           Day: { [Op.and]: { [Op.lte]: maxDay, [Op.gte]: minDay } },
         },
+        limit:Limit,
+        offset:OffLimit
       });
 
       if (events.count === 0) {
@@ -264,8 +314,12 @@ export class EventService {
     max_price: number,
     max_day: Date,
     min_day: Date,
+    limit: number,
+    off_set: number,
   ) {
     try {
+      const Limit: number = +limit || 20;
+      const OffLimit: number = +off_set || 0;
       const minDay = new Date(min_day);
       const maxDay = new Date(max_day);
       const events = await Event.findAndCountAll({
@@ -273,6 +327,8 @@ export class EventService {
           Day: { [Op.and]: { [Op.lte]: maxDay, [Op.gte]: minDay } },
           Price: { [Op.and]: { [Op.lte]: max_price, [Op.gte]: min_price } },
         },
+        limit:Limit,
+        offset:OffLimit
       });
 
       if (events.count === 0) {
