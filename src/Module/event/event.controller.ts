@@ -7,6 +7,7 @@ import {
   Delete,
   Query,
   Put,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -270,5 +271,18 @@ export class EventController {
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
+  }
+
+  @Get()
+  async getAllEvents( 
+    @Query('limit', ParseIntPipe) limit: number, // uso un pipe para convertir el string a int y si no se puede convertir aroja un error
+    @Query('off-set', ParseIntPipe) off_set: number){
+    try {
+      const events = await this.eventService.getAllEvents(limit,off_set);
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+
   }
 }
