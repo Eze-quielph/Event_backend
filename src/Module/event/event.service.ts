@@ -343,4 +343,26 @@ export class EventService {
       throw ErrorManager.createSignatureError(error.message);
     }
   }
+
+  async getAllEvents(
+    limit:number,
+    off_set:number
+  ){
+    try {
+      const events = await Event.findAndCountAll({
+        limit:limit,
+        offset:off_set
+      });
+      if (events.count === 0) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: 'Event not found',
+        });
+      }
+
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
 }
