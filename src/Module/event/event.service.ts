@@ -184,8 +184,8 @@ export class EventService {
           Category: { [Op.like]: `${category}`, [Op.regexp]: '^[a-zA-Z]' },
           Price: { [Op.and]: { [Op.lte]: max_price, [Op.gte]: min_price } },
         },
-        limit:Limit,
-        offset:OffLimit
+        limit: Limit,
+        offset: OffLimit
       });
 
       if (events.count === 0) {
@@ -219,8 +219,8 @@ export class EventService {
             },
           },
         },
-        limit:Limit,
-        offset:OffLimit
+        limit: Limit,
+        offset: OffLimit
       });
 
       if (events.count === 0) {
@@ -257,8 +257,8 @@ export class EventService {
             },
           },
         },
-        limit:Limit,
-        offset:OffLimit
+        limit: Limit,
+        offset: OffLimit
       });
 
       if (events.count === 0) {
@@ -292,8 +292,8 @@ export class EventService {
           Category: { [Op.like]: `${category}`, [Op.regexp]: '^[a-zA-Z]' },
           Day: { [Op.and]: { [Op.lte]: maxDay, [Op.gte]: minDay } },
         },
-        limit:Limit,
-        offset:OffLimit
+        limit: Limit,
+        offset: OffLimit
       });
 
       if (events.count === 0) {
@@ -327,8 +327,8 @@ export class EventService {
           Day: { [Op.and]: { [Op.lte]: maxDay, [Op.gte]: minDay } },
           Price: { [Op.and]: { [Op.lte]: max_price, [Op.gte]: min_price } },
         },
-        limit:Limit,
-        offset:OffLimit
+        limit: Limit,
+        offset: OffLimit
       });
 
       if (events.count === 0) {
@@ -345,13 +345,15 @@ export class EventService {
   }
 
   async getAllEvents(
-    limit:number,
-    off_set:number
-  ){
+    limit: number,
+    off_set: number
+  ) {
     try {
+      const Limit: number = limit || 20;
+      const OffLimit: number = off_set || 0;
       const events = await Event.findAndCountAll({
-        limit:limit,
-        offset:off_set
+        limit: Limit,
+        offset: OffLimit
       });
       if (events.count === 0) {
         throw new ErrorManager({

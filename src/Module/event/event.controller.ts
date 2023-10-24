@@ -6,17 +6,18 @@ import {
   Param,
   Delete,
   Query,
-  Put,
-  ParseIntPipe,
+  Put
 } from '@nestjs/common';
+
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { ErrorManager } from '../../share/types/error.manager';
+import { QueryDefaultParseIntPipe } from '../../Common/pipe/query-default-parse-int.pipe';
 
 @Controller('event')
 export class EventController {
-  constructor(private readonly eventService: EventService) {}
+  constructor(private readonly eventService: EventService) { }
 
   @Post('create')
   async CreateEvents(@Body() createEventDto: CreateEventDto) {
@@ -274,11 +275,11 @@ export class EventController {
   }
 
   @Get()
-  async getAllEvents( 
-    @Query('limit', ParseIntPipe) limit: number, // uso un pipe para convertir el string a int y si no se puede convertir aroja un error
-    @Query('off-set', ParseIntPipe) off_set: number){
+  async getAllEvents(
+    @Query('limit', QueryDefaultParseIntPipe) limit: number, // uso un pipe para convertir el string a int y si no se puede convertir aroja un error
+    @Query('off-set', QueryDefaultParseIntPipe) off_set: number) {
     try {
-      const events = await this.eventService.getAllEvents(limit,off_set);
+      const events = await this.eventService.getAllEvents(limit, off_set);
       return events;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
