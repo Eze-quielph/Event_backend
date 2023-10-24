@@ -349,9 +349,11 @@ export class EventService {
     off_set:number
   ){
     try {
+      const Limit: number = limit || 20;
+      const OffLimit: number = off_set || 0;
       const events = await Event.findAndCountAll({
-        limit:limit,
-        offset:off_set
+        limit:Limit,
+        offset:OffLimit
       });
       if (events.count === 0) {
         throw new ErrorManager({
