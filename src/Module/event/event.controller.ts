@@ -284,6 +284,15 @@ export class EventController {
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
-
+  }
+  @Get('upcoming')
+  async getUpcomingEvents(
+    @Query('limit', QueryDefaultParseIntPipe) limit: number) {
+    try {
+      const events = await this.eventService.getUpcomingEvents(limit);
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
   }
 }
