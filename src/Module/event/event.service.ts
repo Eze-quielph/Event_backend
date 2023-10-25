@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { Op } from 'sequelize';
+import * as dayjs from 'dayjs'
+
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
-import { ErrorManager } from 'src/share/types/error.manager';
+import { ErrorManager } from '../../share/types/error.manager';
 import { Event } from './entities/event.entity';
-import { Op } from 'sequelize';
 
 @Injectable()
 export class EventService {
@@ -362,6 +364,32 @@ export class EventService {
         });
       }
 
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  async getUpcomingEvents(
+    limit: number
+  ) {
+    try {
+      const currentDate = dayjs();
+      const Limit: number = limit || 6;
+      const events = await Event.findAndCountAll({
+        where: {
+          Day: { [Op.gt]: currentDate }
+        },
+        order: [['Day', 'ASC']],
+        limit: Limit
+      });
+
+      if (events.count === 0) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: 'Event not found',
+        });
+      }
       return events;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
