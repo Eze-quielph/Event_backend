@@ -10,6 +10,7 @@ import { Event } from './entities/event.entity';
 @Injectable()
 export class EventService {
   async create(createEventDto: CreateEventDto) {
+    console.info('info dto service: ', createEventDto);
     try {
       const [event, created] = await Event.findOrCreate({
         where: { Name: createEventDto.Name },
@@ -28,6 +29,7 @@ export class EventService {
         },
       });
 
+      console.log(created)
       if (!created) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
