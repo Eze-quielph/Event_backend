@@ -7,18 +7,12 @@ import {
   Delete,
   Query,
   Put,
-  UseInterceptors,
-  UploadedFile,
-  Inject,
+  UseGuards
 } from '@nestjs/common';
-import { createReadStream } from 'fs';
-import * as admin from 'firebase-admin';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { ErrorManager } from '../../share/types/error.manager';
-import { QueryDefaultParseIntPipe } from '../../Common/pipe/query-default-parse-int.pipe';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('event')
 export class EventController {
