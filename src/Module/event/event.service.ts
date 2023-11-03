@@ -46,7 +46,7 @@ export class EventService {
     try {
       const Limit: number = +limit || 20;
       const OffLimit: number = +off_set || 0;
-      const events = await Event.findAndCountAll({
+      const {rows, count} = await Event.findAndCountAll({
         where: {
           Name: {
             [Op.like]: `${name}%`,
@@ -57,14 +57,19 @@ export class EventService {
         offset: OffLimit,
       });
 
-      console.log(events);
-
-      if (events.count === 0) {
+      if (count === 0) {
         throw new ErrorManager({
           type: 'NOT_FOUND',
           message: 'Event not found',
         });
       }
+
+      const events = []
+
+      for(const event in rows){
+        events.push(rows[event].dataValues)
+      }
+
       return events;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
@@ -152,7 +157,7 @@ export class EventService {
     try {
       const Limit: number = +limit || 20;
       const OffLimit: number = +off_set || 0;
-      const events = await Event.findAndCountAll({
+      const {rows, count} = await Event.findAndCountAll({
         where: {
           Category: { [Op.like]: `${category}`, [Op.regexp]: '^[a-zA-Z]' },
         },
@@ -160,11 +165,17 @@ export class EventService {
         offset: OffLimit,
       });
 
-      if (events.count === 0) {
+      if (count === 0) {
         throw new ErrorManager({
           type: 'NOT_FOUND',
           message: 'Event not found',
         });
+      }
+
+      const events = []
+
+      for(const event in rows){
+        events.push(rows[event].dataValues)
       }
 
       return events;
@@ -183,7 +194,7 @@ export class EventService {
     try {
       const Limit: number = +limit || 20;
       const OffLimit: number = +off_set || 0;
-      const events = await Event.findAndCountAll({
+      const {rows, count} = await Event.findAndCountAll({
         where: {
           Category: { [Op.like]: `${category}`, [Op.regexp]: '^[a-zA-Z]' },
           Price: { [Op.and]: { [Op.lte]: max_price, [Op.gte]: min_price } },
@@ -192,11 +203,16 @@ export class EventService {
         offset: OffLimit
       });
 
-      if (events.count === 0) {
+      if (count === 0) {
         throw new ErrorManager({
           type: 'NOT_FOUND',
           message: 'Event not found',
         });
+      }
+      const events = []
+
+      for(const event in rows){
+        events.push(rows[event].dataValues)
       }
 
       return events;
@@ -214,7 +230,7 @@ export class EventService {
     try {
       const Limit: number = +limit || 20;
       const OffLimit: number = +off_set || 0;
-      const events = await Event.findAndCountAll({
+      const {rows, count} = await Event.findAndCountAll({
         where: {
           Price: {
             [Op.and]: {
@@ -227,11 +243,17 @@ export class EventService {
         offset: OffLimit
       });
 
-      if (events.count === 0) {
+      if (count === 0) {
         throw new ErrorManager({
           type: 'NOT_FOUND',
           message: 'Event not found of price',
         });
+      }
+
+      const events = []
+
+      for(const event in rows){
+        events.push(rows[event].dataValues)
       }
 
       return events;
@@ -252,7 +274,7 @@ export class EventService {
       const minDay = new Date(min_day);
       const maxDay = new Date(max_day);
 
-      const events = await Event.findAndCountAll({
+      const {rows, count} = await Event.findAndCountAll({
         where: {
           Day: {
             [Op.and]: {
@@ -265,11 +287,17 @@ export class EventService {
         offset: OffLimit
       });
 
-      if (events.count === 0) {
+      if (count === 0) {
         throw new ErrorManager({
           type: 'NOT_FOUND',
           message: 'Event not found of range day',
         });
+      }
+
+      const events = []
+
+      for(const event in rows){
+        events.push(rows[event].dataValues)
       }
 
       return events;
@@ -291,7 +319,7 @@ export class EventService {
       const Limit: number = +limit || 20;
       const OffLimit: number = +off_set || 0;
 
-      const events = await Event.findAndCountAll({
+      const {rows, count} = await Event.findAndCountAll({
         where: {
           Category: { [Op.like]: `${category}`, [Op.regexp]: '^[a-zA-Z]' },
           Day: { [Op.and]: { [Op.lte]: maxDay, [Op.gte]: minDay } },
@@ -300,11 +328,16 @@ export class EventService {
         offset: OffLimit
       });
 
-      if (events.count === 0) {
+      if (count === 0) {
         throw new ErrorManager({
           type: 'NOT_FOUND',
           message: 'Event not found',
         });
+      }
+      const events = []
+
+      for(const event in rows){
+        events.push(rows[event].dataValues)
       }
 
       return events;
@@ -326,7 +359,7 @@ export class EventService {
       const OffLimit: number = +off_set || 0;
       const minDay = new Date(min_day);
       const maxDay = new Date(max_day);
-      const events = await Event.findAndCountAll({
+      const {rows, count} = await Event.findAndCountAll({
         where: {
           Day: { [Op.and]: { [Op.lte]: maxDay, [Op.gte]: minDay } },
           Price: { [Op.and]: { [Op.lte]: max_price, [Op.gte]: min_price } },
@@ -335,11 +368,17 @@ export class EventService {
         offset: OffLimit
       });
 
-      if (events.count === 0) {
+      if (count === 0) {
         throw new ErrorManager({
           type: 'NOT_FOUND',
           message: 'Event not found',
         });
+      }
+
+      const events = []
+
+      for(const event in rows){
+        events.push(rows[event].dataValues)
       }
 
       return events;
@@ -353,19 +392,26 @@ export class EventService {
     off_set: number
   ) {
     try {
+      console.info('info service: ', limit, off_set)
       const Limit: number = limit || 20;
       const OffLimit: number = off_set || 0;
-      const events = await Event.findAndCountAll({
+      
+      const {count, rows} = await Event.findAndCountAll({
         limit: Limit,
         offset: OffLimit
       });
-      if (events.count === 0) {
+      console.info('info service: ', )
+      if (count === 0) {
         throw new ErrorManager({
           type: 'NOT_FOUND',
           message: 'Event not found',
         });
       }
+      const events = []
 
+      for(const event in rows){
+        events.push(rows[event].dataValues)
+      }
       return events;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
@@ -378,7 +424,7 @@ export class EventService {
     try {
       const currentDate = dayjs();
       const Limit: number = limit || 6;
-      const events = await Event.findAndCountAll({
+      const {count, rows} = await Event.findAndCountAll({
         where: {
           Day: { [Op.gt]: currentDate }
         },
@@ -386,12 +432,18 @@ export class EventService {
         limit: Limit
       });
 
-      if (events.count === 0) {
+      if (count === 0) {
         throw new ErrorManager({
           type: 'NOT_FOUND',
           message: 'Event not found',
         });
       }
+      const events = []
+
+      for(const event in rows){
+        events.push(rows[event].dataValues)
+      }
+
       return events;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
