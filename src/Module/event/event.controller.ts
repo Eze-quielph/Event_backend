@@ -19,28 +19,10 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { ErrorManager } from '../../share/types/error.manager';
 import { QueryDefaultParseIntPipe } from '../../Common/pipe/query-default-parse-int.pipe';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Readable } from 'stream';
-import { FirebaseStorageService } from 'src/Service/Firebase/FirebaseStorage.service';
 
 @Controller('event')
 export class EventController {
-  constructor( private readonly firebaseStorageService: FirebaseStorageService, @Inject('firebaseAdmin') private readonly firebaseAdmin: admin.app.App, private readonly eventService: EventService) {}
-
-  @Post('upload')
-  @UseInterceptors(FileInterceptor('file', { dest: './uploads' }))
-  async uploadImage(@UploadedFile() file: any) {
-    const destinationPath = `image_user/${file.originalname}`;
-
-    try {
-      await this.firebaseStorageService.uploadImage(file, destinationPath)
-      const imageUrl = await this.firebaseStorageService.getDownloadUrl(destinationPath);
-
-      console.log(`Imagen subida exitosamente a ${imageUrl}`);
-      return imageUrl
-    } catch (error) {
-      console.error('Error al subir la imagen:', error);
-    }
-  }
+  constructor( private readonly eventService: EventService) {}
 
   @Post('create')
   async CreateEvents(@Body() createEventDto: CreateEventDto) {
@@ -300,11 +282,11 @@ export class EventController {
 
   @Get()
   async getAllEvents(
-    @Query('limit', QueryDefaultParseIntPipe) limit: number, // uso un pipe para convertir el string a int y si no se puede convertir aroja un error
-    @Query('off-set', QueryDefaultParseIntPipe) off_set: number,
+    @Query('limit') limit: number,
+    @Query('off-set') off_set: number,
   ) {
     try {
-      const events = await this.eventService.getAllEvents(limit, off_set);
+      const events = await this.eventService.getAllEvents(+limit, +off_set);
       return events;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
@@ -312,10 +294,10 @@ export class EventController {
   }
   @Get('upcoming')
   async getUpcomingEvents(
-    @Query('limit', QueryDefaultParseIntPipe) limit: number,
+    @Query('limit') limit: number,
   ) {
     try {
-      const events = await this.eventService.getUpcomingEvents(limit);
+      const events = await this.eventService.getUpcomingEvents(+limit);
       return events;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
