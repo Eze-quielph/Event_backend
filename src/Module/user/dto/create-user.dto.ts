@@ -25,7 +25,6 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsString()
-  @IsDate()
   readonly Birthdate: Date;
 
   @IsNotEmpty()
@@ -41,15 +40,7 @@ export class CreateUserDto {
   @IsString()
   readonly Image?: string;
 
-  @IsNotEmpty()
-  @IsArray()
   readonly Qr?: string;
-
-  @IsNotEmpty()
-  @IsArray()
-  readonly Tickets?: string;
-
-  @IsNotEmpty()
-  @IsArray()
+  
   readonly Role?: string;
 }

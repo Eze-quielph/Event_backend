@@ -12,6 +12,7 @@ export class UserController {
   async register(@Body() createUserDto: CreateUserDto) {
     try {
       const user = await this.userService.register(createUserDto);
+      console.log(user)
       const token = await this.authService.generateToken(user);
       return { token, user, message: 'Usuario creado exitosamente' };
     } catch (error) {

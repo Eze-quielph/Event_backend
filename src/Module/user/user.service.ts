@@ -10,6 +10,7 @@ import { ErrorManager } from 'src/share/types/error.manager';
 export class UserService {
   async register(createUserDto: CreateUserDto): Promise<User> {
     try {
+      console.log(createUserDto)
       const existingUser = await User.findOne({
         where: { Email: createUserDto.Email },
       });
@@ -29,13 +30,13 @@ export class UserService {
         Email: createUserDto.Email,
         Password: hashedPassword,
         Image: createUserDto.Image,
-        Qr: createUserDto.Qr,
-        Tickets: createUserDto.Tickets,
         Role: createUserDto.Role,
       };
 
+      console.info(dataUser)
+
       const user = await User.create(dataUser);
-      return user;
+      return user.dataValues;
     } catch (error) {
       throw new HttpException(error.message || 'No se pudo crear el usuario', HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -54,7 +55,7 @@ export class UserService {
         const isPasswordValid = await bcrypt.compare(password, user.Password);
         
         if (isPasswordValid) {
-          return user;
+          return user.dataValues;
         } else {
           throw new HttpException('Credenciales incorrectas', HttpStatus.UNAUTHORIZED);
         }
