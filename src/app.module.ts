@@ -1,14 +1,24 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import {ConfigModule} from '@nestjs/config'
+import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './Config/Database/MySql/database.module';
 import { UserModule } from './Module/user/user.module';
 import { AuthModule } from './Authentication/auth.module';
 import { EventModule } from './Module/event/event.module';
+import { PaymentModule } from './Module/Payment/payment.module';
+import { MercadopagoModule } from './Config/Mercadopago/mercadopago.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({isGlobal: true}), DatabaseModule, UserModule, EventModule, AuthModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    DatabaseModule,
+    UserModule,
+    EventModule,
+    AuthModule,
+    PaymentModule,
+    MercadopagoModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
