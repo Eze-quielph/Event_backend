@@ -13,15 +13,12 @@ export class UpdateEventDto extends PartialType(CreateEventDto) {
     Description?: string
 
     @IsNotEmpty()
-    @IsDate()
     Day?: Date
 
     @IsNotEmpty()
-    @IsDate()
     Hour?: Date
 
     @IsNotEmpty()
-    @IsNumber()
     Age_min?: number
 
     @IsNotEmpty()
@@ -33,7 +30,6 @@ export class UpdateEventDto extends PartialType(CreateEventDto) {
     Ubication?: string
 
     @IsNotEmpty()
-    @IsNumber()
     Price?: number
 
     @IsNotEmpty()
@@ -45,6 +41,5 @@ export class UpdateEventDto extends PartialType(CreateEventDto) {
     Artist?: string
 
     @IsNotEmpty()
-    @IsNumber()
     Capacity?: number
 }

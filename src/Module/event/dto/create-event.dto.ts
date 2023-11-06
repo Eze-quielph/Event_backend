@@ -11,15 +11,14 @@ export class CreateEventDto {
     Description: string
 
     @IsNotEmpty()
-    @IsDate()
+    @IsString()
     Day: Date
 
     @IsNotEmpty()
-    @IsDate()
+    @IsString()
     Hour: Date
 
     @IsNotEmpty()
-    @IsNumber()
     Age_min: number
 
     @IsNotEmpty()
@@ -31,7 +30,6 @@ export class CreateEventDto {
     Ubication: string
 
     @IsNotEmpty()
-    @IsNumber()
     Price: number
 
     @IsNotEmpty()
@@ -43,6 +41,5 @@ export class CreateEventDto {
     Artist: string
 
     @IsNotEmpty()
-    @IsNumber()
     Capacity: number
 }
