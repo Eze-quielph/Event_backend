@@ -22,18 +22,4 @@ export class UserController {
       throw new HttpException(error.message || 'No se pudo crear el usuario', HttpStatus.BAD_REQUEST);
     }
   }
-
-  @Post('login')
-  async login(@Body() loginUserDto: LoginUserDto) {
-    try {
-      const user = await this.userService.login(loginUserDto);
-      if (user) {
-        return { user, message: 'Usuario logueado exitosamente' };
-      } else {
-        throw new HttpException('Credenciales incorrectas', HttpStatus.BAD_REQUEST);
-      }
-    } catch (error) {
-      throw new HttpException(error.message || 'No se pudo loguear el usuario', HttpStatus.BAD_REQUEST);
-    }
-  }
 }
