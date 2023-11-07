@@ -4,7 +4,7 @@ import * as dayjs from 'dayjs'
 
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
-import { ErrorManager } from '../../share/types/error.manager';
+import { ErrorManager } from '../../share/error.manager';
 import { Event } from './entities/event.entity';
 
 @Injectable()
@@ -49,7 +49,7 @@ export class EventService {
       const {rows, count} = await Event.findAndCountAll({
         where: {
           Name: {
-            [Op.like]: `${name}%`,
+            [Op.like]: `$%{name}%`,
             [Op.regexp]: '^[a-zA-Z]',
           },
         },

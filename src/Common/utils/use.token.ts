@@ -6,14 +6,13 @@ export const useToken = (token: string): IUseToken | string => {
     const decode = jwt.decode(token) as unknown as AuthTokenResult;
 
     const currentDate = new Date();
-    const expireDate = new Date(+decode.exp * 1000);
+    const expireDate = new Date(decode.exp);
 
     return {
-      id: decode.sub,
-      email: decode.email,
+      sub: decode.sub,
       role: decode.role,
-      expire: +expireDate <= +currentDate,
-    };
+      isExpire: +expireDate <= +currentDate / 1000,
+    }
   } catch (error) {
     return 'Token is invalid';
   }
