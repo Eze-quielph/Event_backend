@@ -1,14 +1,19 @@
+import { ROLES } from "../Constants/roles"
+
 export interface AuthTokenResult {
-    readonly sub : string
-    readonly email : string
     readonly role: string
+    readonly sub : string
     readonly iat: string
     readonly exp: string
 }
 
 export interface IUseToken {
-    readonly id: string
-    readonly email: string
     readonly role: string
-    readonly expire: boolean
+    readonly sub : string
+    readonly isExpire: boolean
+}
+
+export interface payloadInterface{
+    sub: string;
+    role: ROLES
 }

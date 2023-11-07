@@ -1,7 +1,7 @@
 import { ArgumentMetadata, Injectable, PipeTransform, BadRequestException } from '@nestjs/common';
 
 
-import { ErrorManager } from '../../share/types/error.manager'
+import { ErrorManager } from '../../share/error.manager'
 
 @Injectable()
 export class QueryDefaultParseIntPipe implements PipeTransform {

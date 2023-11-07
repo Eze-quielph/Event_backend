@@ -4,7 +4,6 @@ import { User } from './entities/user.entity';
 import { UserReturn } from 'src/Common/Interfaces/user-interface';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
-import { ErrorManager } from 'src/share/types/error.manager';
 
 @Injectable()
 export class UserService {
@@ -67,13 +66,22 @@ export class UserService {
     }
   }
 
-  async getUserById(id: string): Promise<UserReturn> {
-    const user = await User.findByPk(id);
+  async getUserById(sub: string): Promise<UserReturn> {
+    const user = await User.findByPk(sub);
     return {
       id: user.id,
       name: user.Username,
       email: user.Email,
       role: user.Role,
     };
+  }
+
+  public async findUserByEmail(email: string): Promise<User>{
+    try {
+      console.info(email)
+      return await User.findOne({where: {Email: email}})
+    } catch (error) {
+      throw new HttpException('No se pudo iniciar sesión', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
