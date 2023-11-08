@@ -14,10 +14,10 @@ export class UserController {
   async register(@Body() createUserDto: CreateUserDto) {
     try {
       
-      const currentDate = new Date()
-      const dateEvent = new Date(createUserDto.Birthdate)
+        const currentDate = new Date()
+      const dataUser = new Date(createUserDto.Birthdate)
       
-      if (dateEvent < currentDate) {
+      if (dataUser > currentDate) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
           message: 'Date is invalid',
