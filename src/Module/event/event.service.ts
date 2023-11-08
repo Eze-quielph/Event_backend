@@ -6,12 +6,22 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { ErrorManager } from '../../share/error.manager';
 import { Event } from './entities/event.entity';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class EventService {
   async create(createEventDto: CreateEventDto) {
     console.info('info dto service: ', createEventDto);
     try {
+
+      const userExisting = User.findByPk(createEventDto.UserId)
+
+      if(!userExisting){
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: 'User not found',
+        });
+      }
       const [event, created] = await Event.findOrCreate({
         where: { Name: createEventDto.Name },
         defaults: {
@@ -26,6 +36,7 @@ export class EventService {
           Image: createEventDto.Image,
           Artist: createEventDto.Artist,
           Capacity: createEventDto.Capacity,
+          userId: createEventDto.UserId,
         },
       });
 
@@ -36,7 +47,7 @@ export class EventService {
           message: 'Event already exists',
         });
       }
-      return event;
+      return event.dataValues;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
@@ -85,7 +96,7 @@ export class EventService {
           message: 'Event not found',
         });
       }
-      return event;
+      return event.dataValues;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }
@@ -104,9 +115,9 @@ export class EventService {
         where: { id },
       });
 
-      const event = await Event.findByPk(id);
+      const {dataValues} = await Event.findByPk(id);
 
-      return { updatedEvent, event };
+      return { updatedEvent, dataValues };
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }

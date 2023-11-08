@@ -2,9 +2,7 @@ import { Controller, Post, Body, HttpStatus, HttpException,  } from '@nestjs/com
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from 'src/Authentication/auth.service';
-import { LoginUserDto } from './dto/login-user.dto';
 import { PublicAccess } from 'src/Common/Decorators/public.decoractors';
-import { AuthGuard } from 'src/Common/Guards/auth.guards';
 
 @Controller('user')
 export class UserController {

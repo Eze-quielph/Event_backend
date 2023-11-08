@@ -15,13 +15,16 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { ErrorManager } from '../../share/error.manager';
 import { AuthGuard } from 'src/Common/Guards/auth.guards';
+import { RolesAccess } from 'src/Common/Decorators/roles.decoractors';
+import { RolesGuard } from 'src/Common/Guards/roles.guard';
 
 @Controller('event')
+@UseGuards(AuthGuard, RolesGuard)
 export class EventController {
   constructor( private readonly eventService: EventService) {}
 
+  @RolesAccess('CREATOR')
   @Post('create')
-  @UseGuards(AuthGuard)
   async CreateEvents(@Body() createEventDto: CreateEventDto) {
     try {
       console.log("info dto controller: ", createEventDto)
@@ -32,8 +35,8 @@ export class EventController {
     }
   }
 
+  @RolesAccess('ADMIN', 'CREATOR')
   @Put('update/:id')
-  @UseGuards(AuthGuard)
   async UpdateEventsById(
     @Body() updateEventDto: UpdateEventDto,
     @Param('id') id: string,
@@ -53,8 +56,8 @@ export class EventController {
     }
   }
 
+  @RolesAccess('USER', 'ADMIN', 'CREATOR')
   @Get('search')
-  @UseGuards(AuthGuard)
   async SearchEventsByName(
     @Query('name') name: string,
     @Query('limit') limit: number,
@@ -75,8 +78,8 @@ export class EventController {
     }
   }
 
+  @RolesAccess('USER', 'ADMIN', 'CREATOR')
   @Get('search/:id')
-  @UseGuards(AuthGuard)
   async SearchEventsById(@Param('id') id: string) {
     try {
       if (!id) {
@@ -92,8 +95,8 @@ export class EventController {
     }
   }
 
+  @RolesAccess('ADMIN', 'CREATOR')
   @Delete('delete/:id')
-  @UseGuards(AuthGuard)
   async DeleteEventsById(@Param('id') id: string) {
     try {
       if (!id) {
@@ -109,8 +112,8 @@ export class EventController {
     }
   }
 
+  @RolesAccess('ADMIN', 'CREATOR')
   @Get('restore/:id')
-  @UseGuards(AuthGuard)
   async RestoreEventsById(@Param('id') id: string) {
     try {
       if (!id) {
@@ -126,8 +129,8 @@ export class EventController {
     }
   }
 
+  @RolesAccess('USER', 'ADMIN', 'CREATOR')
   @Get('filter/category')
-  @UseGuards(AuthGuard)
   async SearchByCategory(
     @Query('category') category: string,
     @Query('limit') limit: number,
@@ -150,8 +153,8 @@ export class EventController {
     }
   }
 
+  @RolesAccess('USER', 'ADMIN', 'CREATOR')
   @Get('filter/price')
-  @UseGuards(AuthGuard)
   async SearchByPrice(
     @Query('min_price') min_price: number,
     @Query('max_price') max_price: number,
@@ -176,8 +179,8 @@ export class EventController {
     }
   }
 
+  @RolesAccess('USER', 'ADMIN', 'CREATOR')
   @Get('filter/day')
-  @UseGuards(AuthGuard)
   async SearchByDay(
     @Query('min_day') min_day: Date,
     @Query('max_day') max_day: Date,
@@ -202,8 +205,8 @@ export class EventController {
     }
   }
 
+  @RolesAccess('USER', 'ADMIN', 'CREATOR')
   @Get('filter/category_price')
-  @UseGuards(AuthGuard)
   async SearchByCategoryAndPrice(
     @Query('min_price') min_price: number,
     @Query('max_price') max_price: number,
@@ -230,8 +233,8 @@ export class EventController {
     }
   }
 
+  @RolesAccess('USER', 'ADMIN', 'CREATOR')
   @Get('filter/category_day')
-  @UseGuards(AuthGuard)
   async SearchByCategoryAndDay(
     @Query('min_day') min_day: Date,
     @Query('max_day') max_day: Date,
@@ -258,8 +261,8 @@ export class EventController {
     }
   }
 
+  @RolesAccess('USER', 'ADMIN', 'CREATOR')
   @Get('filter/price_day')
-  @UseGuards(AuthGuard)
   async SearchByPriceAndDay(
     @Query('min_day') min_day: Date,
     @Query('max_day') max_day: Date,
@@ -288,8 +291,8 @@ export class EventController {
     }
   }
 
+  @RolesAccess('USER', 'ADMIN', 'CREATOR')
   @Get()
-  @UseGuards(AuthGuard)
   async getAllEvents(
     @Query('limit') limit: number,
     @Query('off-set') off_set: number,
@@ -301,8 +304,9 @@ export class EventController {
       throw ErrorManager.createSignatureError(error.message);
     }
   }
+
+  @RolesAccess('USER', 'ADMIN', 'CREATOR')
   @Get('upcoming')
-  @UseGuards(AuthGuard)
   async getUpcomingEvents(
     @Query('limit') limit: number,
   ) {

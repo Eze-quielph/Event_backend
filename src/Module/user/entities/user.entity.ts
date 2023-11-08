@@ -1,5 +1,6 @@
-import { Table, Column, PrimaryKey, Unique, AllowNull, Model, Default, DataType } from "sequelize-typescript"
+import { Table, Column, PrimaryKey, Unique, AllowNull, Model, Default, DataType, HasMany } from "sequelize-typescript"
 import {Exclude} from 'class-transformer'
+import { Event } from "src/Module/event/entities/event.entity"
 
 @Table({
     tableName: "users",
@@ -56,4 +57,7 @@ export class User extends Model{
 
     @Column(DataType.TEXT)
     Role: string
+
+    @HasMany(()=> Event)
+    events: Event[]
 }

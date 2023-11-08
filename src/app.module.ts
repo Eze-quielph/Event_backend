@@ -8,11 +8,12 @@ import { AuthModule } from './Authentication/auth.module';
 import { EventModule } from './Module/event/event.module';
 import { PaymentModule } from './Module/Payment/payment.module';
 import { MercadopagoModule } from './Config/Mercadopago/mercadopago.module';
+import { PostgresModule } from './Config/Database/Postgres/postgres.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    DatabaseModule,
+    PostgresModule,
     UserModule,
     EventModule,
     AuthModule,

@@ -1,4 +1,4 @@
-import {IsString, IsDate, IsNumber, IsNotEmpty} from 'class-validator'
+import {IsString, IsDate, IsNumber, IsNotEmpty, IsUUID} from 'class-validator'
 
 export class CreateEventDto {
 
@@ -42,4 +42,8 @@ export class CreateEventDto {
 
     @IsNotEmpty()
     Capacity: number
+
+    @IsNotEmpty()
+    @IsUUID()
+    UserId: string
 }

@@ -20,6 +20,9 @@ export class UserService {
 
       const hashedPassword = await bcrypt.hash(createUserDto.Password, 10);
 
+      let role:string ='';
+      createUserDto.Role === undefined ? role = 'USER' : role = createUserDto.Role;
+
       const dataUser = {
         FirstName: createUserDto.FirstName,
         LastName: createUserDto.LastName,
@@ -29,7 +32,7 @@ export class UserService {
         Email: createUserDto.Email,
         Password: hashedPassword,
         Image: createUserDto.Image,
-        Role: createUserDto.Role,
+        Role: role,
       };
 
       console.info(dataUser)
@@ -41,33 +44,14 @@ export class UserService {
     }
   }
 
-  async login(loginUserDto: LoginUserDto): Promise<User | void> {
-    try {
-      const user = await User.findOne({
-        where: {
-          Email: loginUserDto.Email,
-        },
-      });
-
-      if (user) {
-        const password: string = loginUserDto.Password;
-        const isPasswordValid = await bcrypt.compare(password, user.Password);
-        
-        if (isPasswordValid) {
-          return user.dataValues;
-        } else {
-          throw new HttpException('Credenciales incorrectas', HttpStatus.UNAUTHORIZED);
-        }
-      } else {
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-      }
-    } catch (error) {
-      throw new HttpException('No se pudo iniciar sesión', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
   async getUserById(sub: string): Promise<UserReturn> {
     const user = await User.findByPk(sub);
+  
+    console.log(sub)
+    if (!user) {
+      throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+    }
+  
     return {
       id: user.id,
       name: user.Username,
@@ -75,6 +59,7 @@ export class UserService {
       role: user.Role,
     };
   }
+  
 
   public async findUserByEmail(email: string): Promise<User>{
     try {
