@@ -9,6 +9,8 @@ import { EventModule } from './Module/event/event.module';
 import { PaymentModule } from './Module/Payment/payment.module';
 import { MercadopagoModule } from './Config/Mercadopago/mercadopago.module';
 import { PostgresModule } from './Config/Database/Postgres/postgres.module';
+import { ShoppingCartModule } from './Module/shopping-cart/shopping-cart.module';
+import { ItemCartModule } from './Module/ItemCart/item-cart.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { PostgresModule } from './Config/Database/Postgres/postgres.module';
     UserModule,
     EventModule,
     AuthModule,
+    ShoppingCartModule,
+    ItemCartModule,
     PaymentModule,
     MercadopagoModule,
   ],

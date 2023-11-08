@@ -14,7 +14,11 @@ export class UserController {
   async register(@Body() createUserDto: CreateUserDto) {
     try {
       
+<<<<<<< Updated upstream
         const currentDate = new Date()
+=======
+      const currentDate = new Date()
+>>>>>>> Stashed changes
       const dataUser = new Date(createUserDto.Birthdate)
       
       if (dataUser > currentDate) {

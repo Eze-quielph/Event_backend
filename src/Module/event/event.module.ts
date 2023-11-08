@@ -8,5 +8,6 @@ import { AuthGuard } from 'src/Common/Guards/auth.guards';
   imports: [UserModule],
   controllers: [EventController],
   providers: [EventService, AuthGuard],
+  exports: [EventService]
 })
 export class EventModule {}
