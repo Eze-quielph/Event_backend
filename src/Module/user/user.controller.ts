@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from 'src/Authentication/auth.service';
 import { PublicAccess } from 'src/Common/Decorators/public.decoractors';
+import { ErrorManager } from 'src/share/error.manager';
 
 @Controller('user')
 export class UserController {
@@ -12,6 +13,17 @@ export class UserController {
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
     try {
+      
+      const currentDate = new Date()
+      const dateEvent = new Date(createUserDto.Birthdate)
+      
+      if (dateEvent < currentDate) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'Date is invalid',
+        });
+      }
+      
       const user = await this.userService.register(createUserDto);
       console.log(user)
 

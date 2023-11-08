@@ -28,6 +28,26 @@ export class EventController {
   async CreateEvents(@Body() createEventDto: CreateEventDto) {
     try {
       console.log("info dto controller: ", createEventDto)
+
+      const currentDate = new Date()
+      const dateEvent = new Date(createEventDto.Day)
+      if (dateEvent < currentDate) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'Date is invalid',
+        });
+      }
+      
+      const currentHour = new Date();
+      const hourEvent = new Date(createEventDto.Hour);
+
+      if (hourEvent < currentHour) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'Hour is invalid',
+        });
+      }
+
       const event = await this.eventService.create(createEventDto);
       return event;
     } catch (error) {
