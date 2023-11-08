@@ -17,6 +17,7 @@ import { ErrorManager } from '../../share/error.manager';
 import { AuthGuard } from 'src/Common/Guards/auth.guards';
 import { RolesAccess } from 'src/Common/Decorators/roles.decoractors';
 import { RolesGuard } from 'src/Common/Guards/roles.guard';
+import { PublicAccess } from 'src/Common/Decorators/public.decoractors';
 
 @Controller('event')
 @UseGuards(AuthGuard, RolesGuard)
@@ -325,7 +326,7 @@ export class EventController {
     }
   }
 
-  @RolesAccess('USER', 'ADMIN', 'CREATOR')
+  @PublicAccess()
   @Get('upcoming')
   async getUpcomingEvents(
     @Query('limit') limit: number,
