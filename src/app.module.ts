@@ -2,12 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule } from './Config/Database/MySql/database.module';
 import { UserModule } from './Module/user/user.module';
 import { AuthModule } from './Authentication/auth.module';
 import { EventModule } from './Module/event/event.module';
-import { PaymentModule } from './Module/Payment/payment.module';
-import { MercadopagoModule } from './Config/Mercadopago/mercadopago.module';
 import { PostgresModule } from './Config/Database/Postgres/postgres.module';
 import { ShoppingCartModule } from './Module/shopping-cart/shopping-cart.module';
 import { ItemCartModule } from './Module/ItemCart/item-cart.module';
@@ -21,8 +18,6 @@ import { ItemCartModule } from './Module/ItemCart/item-cart.module';
     AuthModule,
     ShoppingCartModule,
     ItemCartModule,
-    PaymentModule,
-    MercadopagoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

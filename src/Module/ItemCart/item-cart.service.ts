@@ -15,7 +15,7 @@ export class ItemCartService {
 
   public async createItemCart(
     itemsCartDto: CreateItemCartDto,
-  ): Promise<ItemCart> {
+  ) {
     try {
       const eventExisting = await this.eventService.findById(
         itemsCartDto.idEvent,
@@ -24,12 +24,20 @@ export class ItemCartService {
         throw new Error('Event not found');
       }
 
-      const itemCart = await ItemCart.create(itemsCartDto);
-      console.log(itemCart);
-      if (!itemCart) {
+      const {dataValues} = await ItemCart.create(itemsCartDto);
+      console.log(dataValues);
+      if (!dataValues) {
         throw new Error('ItemCart not created');
       }
-      return itemCart.dataValues;
+
+      const updatePrice = await this.shop.update(dataValues.idShoppingCart, dataValues.quantity, dataValues.unitPrice);
+     
+      const result = {
+        item: dataValues,
+        updateShop: updatePrice,
+      }
+
+      return result;
     } catch (error) {
       console.info(error);
     }
