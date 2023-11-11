@@ -12,23 +12,4 @@ export class ShoppingCartController {
     return this.shoppingCartService.create(createShoppingCartDto);
   }
 
-  @Get()
-  findAll() {
-    return this.shoppingCartService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.shoppingCartService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateShoppingCartDto: UpdateShoppingCartDto) {
-    return this.shoppingCartService.update(+id, updateShoppingCartDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.shoppingCartService.remove(+id);
-  }
 }

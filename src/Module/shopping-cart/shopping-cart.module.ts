@@ -8,9 +8,9 @@ import { ItemCartService } from '../ItemCart/item-cart.service';
 import { EventModule } from '../event/event.module';
 
 @Module({
-  imports: [UserModule, ItemCartModule, EventModule],
+  imports: [UserModule],
   controllers: [ShoppingCartController],
-  providers: [ShoppingCartService, UserService, ItemCartService],
+  providers: [ShoppingCartService, UserService],
   exports: [ShoppingCartService]
 })
 export class ShoppingCartModule {}

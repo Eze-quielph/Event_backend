@@ -8,40 +8,59 @@ import { ItemCartService } from '../ItemCart/item-cart.service';
 
 @Injectable()
 export class ShoppingCartService {
-  constructor(private readonly userService: UserService, private readonly itemCartService: ItemCartService) {}
+  constructor(
+    private readonly userService: UserService,
+  //  private readonly itemCartService: ItemCartService,
+  ) {}
   public async create(createShoppingCartDto: CreateShoppingCartDto) {
     try {
-      const existingUser = await this.userService.getUserById(createShoppingCartDto.idUser);
-      
-      if(!existingUser){
-        throw new UnauthorizedException('User not found')
+      const existingUser = await this.userService.getUserById(
+        createShoppingCartDto.idUser,
+      );
+
+      if (!existingUser) {
+        throw new UnauthorizedException('User not found');
       }
+      console.log(createShoppingCartDto);
 
       const shoppingCart = await ShoppingCart.create({
         creationDate: createShoppingCartDto.creationDate,
         total: 0,
-        idUser: createShoppingCartDto.idUser
+        idUser: createShoppingCartDto.idUser,
       });
 
       return shoppingCart.dataValues;
     } catch (error) {
-      throw new Error(error)
+      throw new Error(error);
     }
   }
 
-  findAll() {
-    return `This action returns all shoppingCart`;
+
+  public async update(id: string, quantity: number, price: number) {
+    try {
+      const total = price * quantity;
+
+    const shoppingCart = await ShoppingCart.update(
+      {
+        total: total,
+      },
+      {
+        where: {
+          id,
+        },
+      },
+    );
+
+      if(!shoppingCart){
+        throw new Error('ShoppingCart not updated');
+      }
+
+    const shopp = await ShoppingCart.findByPk(id);
+
+    return shopp.dataValues
+    } catch (error) {
+      console.info(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} shoppingCart`;
-  }
-
-  update(id: number, updateShoppingCartDto: UpdateShoppingCartDto) {
-    return `This action updates a #${id} shoppingCart`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} shoppingCart`;
-  }
 }
