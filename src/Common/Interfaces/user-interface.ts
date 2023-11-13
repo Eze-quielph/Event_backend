@@ -20,3 +20,23 @@ export interface UserReturn {
     readonly email: string,
     readonly role: string
 }
+
+export interface dataValues {
+
+    id: string,
+    FirstName: string,
+    LastName: string,
+    Username: string,
+    Adress: string,
+    Birthdate: string,
+    Email: string,
+    Password: string,
+    Image: string,
+    Qr: null,
+    Tickets: any,
+    Role: string,
+    createdAt: string,
+    updatedAt: string,
+    deletedAt: any
+
+}

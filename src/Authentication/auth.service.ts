@@ -8,18 +8,18 @@ import * as jwt from 'jsonwebtoken';
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-  ) {}
+  ) { }
 
   public async validateUser(email: string, password: string): Promise<any> {
     try {
       console.info(email, password)
 
-      const {dataValues} = await this.userService.findUserByEmail(email);
+      const dataValues = await this.userService.findUserByEmail(email);
       if (dataValues) {
         console.info(dataValues)
         const math = await bycrypt.compare(password, dataValues.Password);
         console.info(math)
-        if(math) return dataValues
+        if (math) return dataValues
         else throw new Error('password incorrecta');
       }
     } catch (error) {
@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   public async generateJWT(user: User): Promise<any> {
-    const {dataValues} = await this.userService.findUserByEmail(user.Email);
+    const dataValues = await this.userService.findUserByEmail(user.Email);
 
     console.info(dataValues)
 
@@ -55,7 +55,7 @@ export class AuthService {
       expires: '1h',
     });
 
-    return{
+    return {
       access_token,
       dataValues
     }

@@ -1,9 +1,10 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { UserReturn } from 'src/Common/Interfaces/user-interface';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
+import { dataValues } from '../../Common/Interfaces/user-interface';
 
 @Injectable()
 export class UserService {
@@ -61,10 +62,12 @@ export class UserService {
   }
 
 
-  public async findUserByEmail(email: string): Promise<User> {
+  public async findUserByEmail(email: string): Promise<dataValues> {
     try {
       console.info(email)
-      return await User.findOne({ where: { Email: email } })
+      /*     return await User.findOne({ where: { Email: email } }) */
+      const user = await User.findOne({ where: { Email: email } });
+      return user.dataValues;
     } catch (error) {
       throw new HttpException('No se pudo iniciar sesión', HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -85,13 +88,18 @@ export class UserService {
   }
 
   public async restoreUserById(id: string): Promise<void> {
-    const user = await User.findByPk(id);
+    try {
+      const result = await User.restore({ where: { id: id } });
 
-    if (!user) {
-      throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+      if (result !== null) {
+        return result;
+      } else {
+        throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+      }
+    } catch (error) {
+      throw new Error(
+        `Ocurrió un error durante la activación del usuario: ${error.message}`,
+      );
     }
-
-    // flag paranoid dudoso, a revisar...
-    await user.update({ paranoid: false });
   }
 }

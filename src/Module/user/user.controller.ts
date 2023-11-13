@@ -1,12 +1,15 @@
-import { Controller, Post, Body, HttpStatus, HttpException, Delete, Param, Put, Get } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, HttpException, Delete, Param, Put, Get, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService } from 'src/Authentication/auth.service';
 import { PublicAccess } from 'src/Common/Decorators/public.decoractors';
 import { ErrorManager } from 'src/share/error.manager';
 import { RolesAccess } from 'src/Common/Decorators/roles.decoractors';
+import { RolesGuard } from 'src/Common/Guards/roles.guard';
+import { AuthGuard } from 'src/Common/Guards/auth.guards';
 
 @Controller('user')
+@UseGuards(AuthGuard, RolesGuard)
 export class UserController {
   constructor(private readonly userService: UserService, private readonly authService: AuthService) { }
 
@@ -34,7 +37,7 @@ export class UserController {
     }
   }
 
-  @PublicAccess()
+  @RolesAccess('ADMIN')
   @Get(':id')
   async getUserById(@Param('id') id: string) {
     try {
@@ -42,15 +45,16 @@ export class UserController {
       return { user };
     } catch (error) {
       throw new HttpException(error.message || 'No se pudo obtener el usuario por ID', HttpStatus.NOT_FOUND);
+      /*      console.log('no hay', error.message); */
     }
   }
 
-  @PublicAccess()
+  @RolesAccess('ADMIN')
   @Get('email/:email')
   async findUserByEmail(@Param('email') email: string) {
     try {
       const user = await this.userService.findUserByEmail(email);
-      return { user };
+      return user;
     } catch (error) {
       throw new HttpException(error.message || 'No se pudo encontrar el usuario por email', HttpStatus.NOT_FOUND);
     }
@@ -69,7 +73,7 @@ export class UserController {
   }
 
   @RolesAccess('ADMIN')
-  @Put(':id/restore')
+  @Put('restore/:id')
   async restoreUser(@Param('id') id: string) {
     try {
       await this.userService.restoreUserById(id);
