@@ -20,7 +20,7 @@ export class UserService {
 
       const hashedPassword = await bcrypt.hash(createUserDto.Password, 10);
 
-      let role:string ='';
+      let role: string = '';
       createUserDto.Role === undefined ? role = 'USER' : role = createUserDto.Role;
 
       const dataUser = {
@@ -46,12 +46,12 @@ export class UserService {
 
   async getUserById(sub: string): Promise<UserReturn> {
     const user = await User.findByPk(sub);
-  
+
     console.log(sub)
     if (!user) {
       throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
     }
-  
+
     return {
       id: user.id,
       name: user.Username,
@@ -59,14 +59,39 @@ export class UserService {
       role: user.Role,
     };
   }
-  
 
-  public async findUserByEmail(email: string): Promise<User>{
+
+  public async findUserByEmail(email: string): Promise<User> {
     try {
       console.info(email)
-      return await User.findOne({where: {Email: email}})
+      return await User.findOne({ where: { Email: email } })
     } catch (error) {
       throw new HttpException('No se pudo iniciar sesión', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  public async deleteUserById(id: string): Promise<void> {
+    try {
+      const result = await User.destroy({
+        where: { id },
+      });
+
+      if (result === 0) {
+        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+      }
+    } catch (error) {
+      throw new HttpException(error.message || 'No se pudo eliminar el usuario', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  public async restoreUserById(id: string): Promise<void> {
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+    }
+
+    // flag paranoid dudoso, a revisar...
+    await user.update({ paranoid: false });
   }
 }
