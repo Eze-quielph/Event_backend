@@ -8,7 +8,6 @@ import {
   Query,
   Put,
   UseGuards,
-  
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -22,23 +21,23 @@ import { PublicAccess } from 'src/Common/Decorators/public.decoractors';
 @Controller('event')
 @UseGuards(AuthGuard, RolesGuard)
 export class EventController {
-  constructor( private readonly eventService: EventService) {}
+  constructor(private readonly eventService: EventService) {}
 
   @RolesAccess('CREATOR')
   @Post('create')
   async CreateEvents(@Body() createEventDto: CreateEventDto) {
     try {
-      console.log("info dto controller: ", createEventDto)
+      console.log('info dto controller: ', createEventDto);
 
-      const currentDate = new Date()
-      const dateEvent = new Date(createEventDto.Day)
+      const currentDate = new Date();
+      const dateEvent = new Date(createEventDto.Day);
       if (dateEvent < currentDate) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
           message: 'Date is invalid',
         });
       }
-      
+
       const currentHour = new Date();
       const hourEvent = new Date(createEventDto.Hour);
 
@@ -328,12 +327,24 @@ export class EventController {
 
   @PublicAccess()
   @Get('upcoming')
-  async getUpcomingEvents(
-    @Query('limit') limit: number,
-  ) {
+  async getUpcomingEvents(@Query('limit') limit: number) {
     try {
       const events = await this.eventService.getUpcomingEvents(+limit);
       return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+  
+  @RolesAccess('USER', 'ADMIN', 'CREATOR')
+  @Get('fiter/:user_id')
+  public async getEventsByUserId(
+    @Param(':user_id') user_id: string,
+    @Query('limit') limit: number,
+    @Query('off_set') off_set: number,
+  ) {
+    try {
+      return this.eventService.searchEventUserId(+limit, +off_set, user_id);
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
     }

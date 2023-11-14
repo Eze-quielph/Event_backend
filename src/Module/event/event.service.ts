@@ -7,9 +7,11 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { ErrorManager } from '../../share/error.manager';
 import { Event } from './entities/event.entity';
 import { User } from '../user/entities/user.entity';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class EventService {
+  constructor(private readonly userService: UserService) {}
   async create(createEventDto: CreateEventDto) {
     console.info('info dto service: ', createEventDto);
     try {
@@ -59,7 +61,7 @@ export class EventService {
       const { rows, count } = await Event.findAndCountAll({
         where: {
           Name: {
-            [Op.like]: `$%{name}%`,
+            [Op.like]: `%${name}%`,
             [Op.regexp]: '^[a-zA-Z]',
           },
         },
@@ -451,6 +453,42 @@ export class EventService {
         events.push(rows[event].dataValues);
       }
 
+      return events;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async searchEventUserId(
+    limit: number,
+    offSet: number,
+    userId: string,
+  ) {
+    try {
+      const Limit: number = limit || 20;
+      const OffLimit: number = offSet || 0;
+      const userExisting = await this.userService.getUserById(userId);
+      if (!userExisting)
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: 'USER not found',
+        });
+      const { count, rows } = await Event.findAndCountAll({
+        where: { userId },
+        limit: Limit,
+        offset: OffLimit,
+      });
+      if (count === 0) {
+        throw new ErrorManager({
+          type: 'NOT_FOUND',
+          message: 'Event not found',
+        });
+      }
+
+      const events = [];
+      for (const event in rows) {
+        events.push(rows[event].dataValues);
+      }
       return events;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
