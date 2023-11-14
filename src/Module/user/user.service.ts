@@ -5,6 +5,7 @@ import { UserReturn } from 'src/Common/Interfaces/user-interface';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
 import { dataValues } from '../../Common/Interfaces/user-interface';
+import { ErrorManager } from 'src/share/error.manager';
 
 @Injectable()
 export class UserService {
@@ -99,6 +100,21 @@ export class UserService {
     } catch (error) {
       throw new Error(
         `Ocurrió un error durante la activación del usuario: ${error.message}`,
+      );
+    }
+  }
+
+  public async getAllUsers() {
+    try {
+      const users = await User.findAll();
+      if (!users || users.length === 0) {
+        throw new NotFoundException('No hay usuarios en la base de datos');
+      }
+      return users
+    }
+    catch (error) {
+      throw new HttpException(
+        'Hubo un error al obtener todos los usuarios', HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
   }

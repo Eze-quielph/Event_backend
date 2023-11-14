@@ -37,6 +37,20 @@ export class UserController {
     }
   }
 
+  @PublicAccess()
+  @Get('all')
+  async getAllUsers() {
+    try {
+      const users = await this.userService.getAllUsers();
+      return { users };
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'No se pudo obtener la lista de usuarios',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   @RolesAccess('ADMIN')
   @Get(':id')
   async getUserById(@Param('id') id: string) {
