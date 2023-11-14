@@ -110,7 +110,8 @@ export class UserService {
       if (!users || users.length === 0) {
         throw new NotFoundException('No hay usuarios en la base de datos');
       }
-      return users
+      const usersDataValues = users.map((user) => user.dataValues);
+      return usersDataValues
     }
     catch (error) {
       throw new HttpException(
