@@ -7,6 +7,7 @@ import { ErrorManager } from 'src/share/error.manager';
 import { RolesAccess } from 'src/Common/Decorators/roles.decoractors';
 import { RolesGuard } from 'src/Common/Guards/roles.guard';
 import { AuthGuard } from 'src/Common/Guards/auth.guards';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 @UseGuards(AuthGuard, RolesGuard)
@@ -101,4 +102,17 @@ export class UserController {
     }
   }
 
+  //@PublicAccess()
+  @RolesAccess('USER', 'ADMIN', 'CREATOR')
+  @Put('update/:id')
+  public async updateUser(@Param('id') id: string, @Body() update: UpdateUserDto) {
+    try {
+      console.log(id)
+      const user = await this.userService.updateUser(id, update);
+     console.log(user)
+      return { user, message: 'Usuario actualizado exitosamente' };
+    } catch (error) {
+      throw new HttpException(error.message || 'No se pudo actualizar el usuario', HttpStatus.BAD_REQUEST);
+    }
+  }
 }

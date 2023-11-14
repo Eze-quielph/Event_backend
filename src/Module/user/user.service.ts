@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
 import { dataValues } from '../../Common/Interfaces/user-interface';
 import { ErrorManager } from 'src/share/error.manager';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -116,6 +117,21 @@ export class UserService {
     catch (error) {
       throw new HttpException(
         'Hubo un error al obtener todos los usuarios', HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  public async updateUser(id: string, updateUser: UpdateUserDto) {
+    try {
+      const user = await User.findByPk(id);
+      if (!user) {
+        throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+      }
+      const updatedUser = await user.update(updateUser);
+      return updatedUser.dataValues;
+    } catch (error) {
+      throw new Error(
+        `Ocurrió un error durante la actualización del usuario: ${error.message}`,
       );
     }
   }
