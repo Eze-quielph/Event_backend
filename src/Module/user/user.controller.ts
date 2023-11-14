@@ -51,7 +51,8 @@ export class UserController {
     }
   }
 
-  @RolesAccess('ADMIN')
+  /*   @RolesAccess('ADMIN') */
+  @PublicAccess()
   @Get(':id')
   async getUserById(@Param('id') id: string) {
     try {
@@ -63,7 +64,8 @@ export class UserController {
     }
   }
 
-  @RolesAccess('ADMIN')
+  /*   @RolesAccess('ADMIN') */
+  @PublicAccess()
   @Get('email/:email')
   async findUserByEmail(@Param('email') email: string) {
     try {
@@ -75,7 +77,8 @@ export class UserController {
   }
 
   //dudoso manejo de roles... a revisar
-  @RolesAccess('ADMIN')
+  /*   @RolesAccess('ADMIN') */
+  @PublicAccess()
   @Delete(':id')
   async deleteUser(@Param('id') id: string) {
     try {
@@ -86,7 +89,8 @@ export class UserController {
     }
   }
 
-  @RolesAccess('ADMIN')
+  /*   @RolesAccess('ADMIN') */
+  @PublicAccess()
   @Put('restore/:id')
   async restoreUser(@Param('id') id: string) {
     try {
