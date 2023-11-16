@@ -1,4 +1,9 @@
-import { Injectable, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { UserReturn } from 'src/Common/Interfaces/user-interface';
@@ -12,7 +17,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UserService {
   async register(createUserDto: CreateUserDto): Promise<User> {
     try {
-      console.log(createUserDto)
+      console.log(createUserDto);
       const existingUser = await User.findOne({
         where: { Email: createUserDto.Email },
       });
@@ -24,7 +29,9 @@ export class UserService {
       const hashedPassword = await bcrypt.hash(createUserDto.Password, 10);
 
       let role: string = '';
-      createUserDto.Role === undefined ? role = 'USER' : role = createUserDto.Role;
+      createUserDto.Role === undefined
+        ? (role = 'USER')
+        : (role = createUserDto.Role);
 
       const dataUser = {
         FirstName: createUserDto.FirstName,
@@ -38,19 +45,22 @@ export class UserService {
         Role: role,
       };
 
-      console.info(dataUser)
+      console.info(dataUser);
 
       const user = await User.create(dataUser);
       return user.dataValues;
     } catch (error) {
-      throw new HttpException(error.message || 'No se pudo crear el usuario', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        error.message || 'No se pudo crear el usuario',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   async getUserById(sub: string): Promise<UserReturn> {
     const user = await User.findByPk(sub);
 
-    console.log(sub)
+    console.log(sub);
     if (!user) {
       throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
     }
@@ -63,15 +73,17 @@ export class UserService {
     };
   }
 
-
   public async findUserByEmail(email: string): Promise<dataValues> {
     try {
-      console.info(email)
+      console.info(email);
       /*     return await User.findOne({ where: { Email: email } }) */
       const user = await User.findOne({ where: { Email: email } });
       return user.dataValues;
     } catch (error) {
-      throw new HttpException('No se pudo iniciar sesión', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'No se pudo iniciar sesión',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -85,7 +97,10 @@ export class UserService {
         throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
       }
     } catch (error) {
-      throw new HttpException(error.message || 'No se pudo eliminar el usuario', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        error.message || 'No se pudo eliminar el usuario',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -112,11 +127,11 @@ export class UserService {
         throw new NotFoundException('No hay usuarios en la base de datos');
       }
       const usersDataValues = users.map((user) => user.dataValues);
-      return usersDataValues
-    }
-    catch (error) {
+      return usersDataValues;
+    } catch (error) {
       throw new HttpException(
-        'Hubo un error al obtener todos los usuarios', HttpStatus.INTERNAL_SERVER_ERROR
+        'Hubo un error al obtener todos los usuarios',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
@@ -136,16 +151,17 @@ export class UserService {
     }
   }
 
-  public async restoreUserByEmail(Email:string):Promise<dataValues| void>{
+  public async restoreUserByEmail(Email: string) {
     try {
-      const userRestore = await User.restore({where:{Email:Email}})
-      if(!userRestore){
-        throw new NotFoundException(`Usuario con Email ${Email} no encontrado`)
+      const userRestore = await User.restore({ where: { Email: Email } });
+      if (userRestore !== null) {
+        const searchUser = await User.findOne({ where: { Email: Email } });
+        return searchUser.dataValues;
+      } else {
+        throw new NotFoundException(`Usuario con Email ${Email} no encontrado`);
       }
-
-      return userRestore.dataValues
     } catch (error) {
-      throw new Error("Error durante la restauracion del user")
+      throw new Error('Error durante la restauracion del user');
     }
   }
 }

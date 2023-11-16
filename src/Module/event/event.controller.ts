@@ -115,7 +115,8 @@ export class EventController {
     }
   }
 
-  @RolesAccess('ADMIN', 'CREATOR')
+  // @RolesAccess('ADMIN', 'CREATOR')
+  @PublicAccess()
   @Delete('delete/:id')
   async DeleteEventsById(@Param('id') id: string) {
     try {
@@ -132,7 +133,7 @@ export class EventController {
     }
   }
 
-  @RolesAccess('ADMIN', 'CREATOR')
+  @PublicAccess()
   @Get('restore')
   async RestoreEventsById(@Query('name') name: string) {
     try {
@@ -335,11 +336,11 @@ export class EventController {
       throw ErrorManager.createSignatureError(error.message);
     }
   }
-  
+
   @RolesAccess('USER', 'ADMIN', 'CREATOR')
-  @Get('fiter/:user_id')
+  @Get('filter')
   public async getEventsByUserId(
-    @Param(':user_id') user_id: string,
+    @Query('user_id') user_id: string,
     @Query('limit') limit: number,
     @Query('off_set') off_set: number,
   ) {
