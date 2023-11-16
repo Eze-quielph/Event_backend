@@ -133,16 +133,16 @@ export class EventController {
   }
 
   @RolesAccess('ADMIN', 'CREATOR')
-  @Get('restore/:id')
-  async RestoreEventsById(@Param('id') id: string) {
+  @Get('restore')
+  async RestoreEventsById(@Query('name') name: string) {
     try {
-      if (!id) {
+      if (!name) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'Id is required',
+          message: 'name is required',
         });
       }
-      const event = await this.eventService.restore(id);
+      const event = await this.eventService.restore(name);
       return event;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);

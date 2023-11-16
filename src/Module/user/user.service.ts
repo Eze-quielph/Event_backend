@@ -135,4 +135,17 @@ export class UserService {
       );
     }
   }
+
+  public async restoreUserByEmail(Email:string):Promise<dataValues| void>{
+    try {
+      const userRestore = await User.restore({where:{Email:Email}})
+      if(!userRestore){
+        throw new NotFoundException(`Usuario con Email ${Email} no encontrado`)
+      }
+
+      return userRestore.dataValues
+    } catch (error) {
+      throw new Error("Error durante la restauracion del user")
+    }
+  }
 }

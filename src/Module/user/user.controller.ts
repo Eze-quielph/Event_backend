@@ -92,10 +92,10 @@ export class UserController {
 
   /*   @RolesAccess('ADMIN') */
   @PublicAccess()
-  @Put('restore/:id')
-  async restoreUser(@Param('id') id: string) {
+  @Put('restore')
+  async restoreUser(@Query('Email') Email: string) {
     try {
-      await this.userService.restoreUserById(id);
+      await this.userService.restoreUserByEmail(Email);
       return { message: 'Usuario restaurado exitosamente' };
     } catch (error) {
       throw new HttpException(error.message || 'No se pudo restaurar el usuario', HttpStatus.BAD_REQUEST);

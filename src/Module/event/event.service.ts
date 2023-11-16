@@ -141,9 +141,9 @@ export class EventService {
     }
   }
 
-  async restore(id: string): Promise<Event> {
+  async restore(name: string): Promise<Event> {
     try {
-      const restoreCount: any = await Event.restore({ where: { id } });
+      const restoreCount: any = await Event.restore({ where: { Name:name } });
 
       if (restoreCount === 0) {
         throw new ErrorManager({
@@ -152,7 +152,7 @@ export class EventService {
         });
       }
 
-      const restoredEvent: Event | null = await Event.findByPk(id);
+      const restoredEvent: Event | null = await Event.findOne({where:{Name:name}});
 
       if (!restoredEvent) {
         throw new ErrorManager({
