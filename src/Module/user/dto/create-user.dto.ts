@@ -19,13 +19,9 @@ export class CreateUserDto {
   @IsString()
   readonly Username: string;
 
-  @IsNotEmpty()
-  @IsString()
-  readonly Adress: string;
+  readonly Adress?: string;
 
-  @IsNotEmpty()
-  @IsString()
-  readonly Birthdate: Date;
+  readonly Birthdate?: Date;
 
   @IsNotEmpty()
   @IsString()

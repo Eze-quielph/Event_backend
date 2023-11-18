@@ -26,11 +26,9 @@ export class User extends Model{
     @Column(DataType.STRING)
     Username: string
 
-    @AllowNull(false)
     @Column(DataType.STRING)
     Adress: string
 
-    @AllowNull(false)
     @Column(DataType.DATE)
     Birthdate: Date
 
@@ -47,11 +45,9 @@ export class User extends Model{
     @Column(DataType.STRING)
     Image: string
 
-    @Exclude()
     @Column(DataType.TEXT)
     Qr: string
 
-    @Exclude()
     @Column(DataType.TEXT)
     Tickets: string
 

@@ -33,12 +33,22 @@ export class UserService {
         ? (role = 'USER')
         : (role = createUserDto.Role);
 
+      let addres : string = '';
+      createUserDto.Adress === undefined
+        ? (addres = '')
+        : (addres = createUserDto.Adress);
+
+      let birthdate: Date;;
+      createUserDto.Birthdate === undefined
+        ? (birthdate = new Date() )
+        : (birthdate = createUserDto.Birthdate);
+
       const dataUser = {
         FirstName: createUserDto.FirstName,
         LastName: createUserDto.LastName,
         Username: createUserDto.Username,
-        Adress: createUserDto.Adress,
-        Birthdate: createUserDto.Birthdate,
+        Adress: addres,
+        Birthdate: birthdate,
         Email: createUserDto.Email,
         Password: hashedPassword,
         Image: createUserDto.Image,
